@@ -28,7 +28,12 @@ const Home = ({navigation}) => {
             on_press={() => navigation.navigate('NutritionPage')}
           />
         </View>
-        <Text style={{textAlign: 'center', fontFamily: 'Antonio-Thin'}}>
+        <Text
+          style={{
+            textAlign: 'center',
+            fontFamily: 'Antonio-Thin',
+            marginBottom: 10,
+          }}>
           &copy; {new Date().getFullYear()} Everything Food - Powered by Edamam
         </Text>
       </View>

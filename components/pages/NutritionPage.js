@@ -6,10 +6,10 @@ import {Button} from 'react-native-paper';
 const NutritionPage = ({navigation}) => {
   return (
     <View>
-      <Header text="Nutrition Analysis" color={'#12c471'} />
+      <Header text="Nutrition Analysis" color={'#114e60'} />
       <Button
         mode={'contained'}
-        color={'#12c471'}
+        color={'#114e60'}
         icon="arrow-left-bold"
         style={{margin: 10, float: 'left', width: 20}}
         labelStyle={{

@@ -1,5 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, TextInput, StyleSheet, FlatList} from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  FlatList,
+  Dimensions,
+} from 'react-native';
 import {Button, IconButton} from 'react-native-paper';
 import {Header} from '../Header';
 import {NavigationContainer} from '@react-navigation/native';
@@ -9,6 +16,8 @@ const RecipePage = ({navigation}) => {
   const [searchInputValue, setSearchInputValue] = useState('');
   const [searched, setSearched] = useState(false);
   const [searchHits, setSearchHits] = useState([]);
+
+  const windowWidth = Dimensions.get('window').width;
 
   const handleSearch = async keyword => {
     const API = `https://api.edamam.com/search?q=${keyword}&app_id=bbd0ec31&app_key=9c0870aaa3cb69c2d6135078ccd73173`;
@@ -28,7 +37,7 @@ const RecipePage = ({navigation}) => {
       paddingLeft: 25,
       paddingRight: 15,
       fontFamily: 'Antonio-Regular',
-      width: 350,
+      width: windowWidth / 1.2,
       fontSize: 20,
     },
 
