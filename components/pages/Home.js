@@ -22,7 +22,7 @@ const Home = ({navigation}) => {
             on_press={() => navigation.navigate('RecipeSearch')}
           />
           <HomeButton
-            text={'NutritionPage Analysis'}
+            text={'Nutrition Analysis'}
             color={'#114e60'}
             icon={'magnify'}
             on_press={() => navigation.navigate('NutritionPage')}
