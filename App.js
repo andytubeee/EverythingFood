@@ -2,6 +2,8 @@ import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import {Header} from './components/Header';
 import {HomeButton} from './components/HomeButton';
+import Home from './components/pages/Home';
+import Navigator from './components/RouterStack';
 
 const s = StyleSheet.create({
   container: {
@@ -10,28 +12,7 @@ const s = StyleSheet.create({
 });
 
 const App = () => {
-  return (
-    <View style={s.container}>
-      <Header text="Everything Food" color={'#12c471'} />
-      <View style={{justifyContent: 'space-between', flex: 1}}>
-        <View style={{marginTop: 'auto', marginBottom: 'auto'}}>
-          <HomeButton
-            text={'Search Recipes'}
-            color={'#325288'}
-            icon={'book-alphabet'}
-          />
-          <HomeButton
-            text={'Nutrition Analysis'}
-            color={'#114e60'}
-            icon={'magnify'}
-          />
-        </View>
-        <Text style={{textAlign: 'center', fontFamily: 'Antonio-Thin'}}>
-          &copy; {new Date().getFullYear()} Everything Food - Powered by Edamam
-        </Text>
-      </View>
-    </View>
-  );
+  return <Navigator />;
 };
 
 export default App;
