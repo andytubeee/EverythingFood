@@ -6,6 +6,14 @@ export const RecipeCard = ({recipe}) => {
   const {
     recipe: {image, label},
   } = recipe;
+
+  const formatLabel = label => {
+    if (String(label).length >= 24) {
+      return String(label).slice(0, 24) + '...';
+    }
+    return label;
+  };
+
   return (
     <TouchableHighlight
       style={{width: windowWidth / 2.5, margin: 10}}

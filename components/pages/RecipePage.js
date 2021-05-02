@@ -6,6 +6,7 @@ import {
   StyleSheet,
   FlatList,
   Dimensions,
+  ScrollView,
 } from 'react-native';
 import {Button, IconButton} from 'react-native-paper';
 import {Header} from '../Header';
@@ -16,16 +17,27 @@ const RecipePage = ({navigation}) => {
   const [searchInputValue, setSearchInputValue] = useState('');
   const [searched, setSearched] = useState(false);
   const [searchHits, setSearchHits] = useState([]);
+  const [to, setTo] = useState(10);
+  const [from, setFrom] = useState(0);
 
   const windowWidth = Dimensions.get('window').width;
+  const windowHeight = Dimensions.get('window').height;
 
-  const handleSearch = async keyword => {
-    const API = `https://api.edamam.com/search?q=${keyword}&app_id=bbd0ec31&app_key=9c0870aaa3cb69c2d6135078ccd73173`;
+  const handleSearch = async (keyword, From, To) => {
+    const API = `https://api.edamam.com/search?q=${keyword}&from=${From}&to=${To}&app_id=bbd0ec31&app_key=9c0870aaa3cb69c2d6135078ccd73173`;
     return await fetch(API)
       .then(response => response.json())
-      .then(data => data.hits)
-      .catch(err => [-1]);
+      .then(data => (data.more ? data.hits : [-1]))
+      .catch(err => [-69]);
   };
+
+  const OnMorePress = () => {
+    setTo(prev => (prev += 10));
+    setFrom(prev => (prev += 10));
+    handleSearch(searchInputValue, from, to).then(res => setSearchHits(res));
+  };
+
+  const OnFewPress = () => {};
 
   const s = StyleSheet.create({
     searchInput: {
@@ -60,7 +72,7 @@ const RecipePage = ({navigation}) => {
         mode={'contained'}
         color={'#325288'}
         icon="arrow-left-bold"
-        style={{margin: 10, float: 'left', width: 50}}
+        style={{margin: 10, float: 'left', width: windowWidth / 10}}
         labelStyle={{
           fontSize: 10,
           fontFamily: 'Antonio-Medium',
@@ -79,30 +91,74 @@ const RecipePage = ({navigation}) => {
           style={s.searchInput}
           onChangeText={setSearchInputValue}
           value={searchInputValue}
-          placeholder={'Enter Dish'}
+          placeholder={'Search'}
         />
         <IconButton
           icon="magnify"
           color={'#325288'}
           size={30}
           onPress={() =>
-            handleSearch(searchInputValue).then(res => setSearchHits(res))
+            handleSearch(searchInputValue, from, to).then(res => {
+              setSearchHits(res);
+            })
           }
         />
       </View>
-      {Array.from(searchHits).length > 0 && (
-        <FlatList
-          data={searchHits}
-          renderItem={({item}) => <RecipeCard recipe={item} />}
-          numColumns={2}
-          keyExtractor={(item, index) => index.toString()}
-          contentContainerStyle={{
-            flexGrow: 1,
-            alignItems: 'center',
-            paddingVertical: 20,
-          }}
-        />
-      )}
+      {Array.from(searchHits).length > 0 &&
+        (Array.from(searchHits) !== [-1] ? (
+          <>
+            <View
+              style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+              <Button
+                mode={'contained'}
+                color={'#325288'}
+                icon="arrow-left-bold"
+                disabled={from === 0}
+                style={{
+                  width: windowWidth / 10,
+                  margin: 10,
+                  alignSelf: 'flex-end',
+                }}
+                labelStyle={{
+                  fontSize: 10,
+                  fontFamily: 'Antonio-Medium',
+                  color: '#fff',
+                }}>
+                Fewer
+              </Button>
+              <Button
+                mode={'contained'}
+                color={'#325288'}
+                icon="arrow-right-bold"
+                style={{
+                  width: windowWidth / 10,
+                  margin: 10,
+                  marginLeft: 'auto',
+                }}
+                labelStyle={{
+                  fontSize: 10,
+                  fontFamily: 'Antonio-Medium',
+                  color: '#fff',
+                }}
+                onPress={OnMorePress}>
+                More
+              </Button>
+            </View>
+            <FlatList
+              data={searchHits}
+              renderItem={({item}) => <RecipeCard recipe={item} />}
+              numColumns={2}
+              keyExtractor={(item, index) => index.toString()}
+              contentContainerStyle={{
+                alignItems: 'center',
+                paddingTop: 20,
+                paddingBottom: windowHeight / 2.5,
+              }}
+            />
+          </>
+        ) : (
+          <Text>None</Text>
+        ))}
     </View>
   );
 };
