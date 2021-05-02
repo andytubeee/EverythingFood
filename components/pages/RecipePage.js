@@ -1,15 +1,21 @@
-import React, {useState} from 'react';
-import {View, Text, TextInput, StyleSheet} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {View, Text, TextInput, StyleSheet, FlatList} from 'react-native';
 import {Button, IconButton} from 'react-native-paper';
 import {Header} from '../Header';
 import {NavigationContainer} from '@react-navigation/native';
+import {RecipeCard} from '../RecipeCard';
 
 const RecipePage = ({navigation}) => {
   const [searchInputValue, setSearchInputValue] = useState('');
   const [searched, setSearched] = useState(false);
+  const [searchHits, setSearchHits] = useState([]);
 
-  const handleSearch = keyword => {
+  const handleSearch = async keyword => {
     const API = `https://api.edamam.com/search?q=${keyword}&app_id=bbd0ec31&app_key=9c0870aaa3cb69c2d6135078ccd73173`;
+    return await fetch(API)
+      .then(response => response.json())
+      .then(data => data.hits)
+      .catch(err => [-1]);
   };
 
   const s = StyleSheet.create({
@@ -70,10 +76,24 @@ const RecipePage = ({navigation}) => {
           icon="magnify"
           color={'#325288'}
           size={30}
-          onPress={() => setSearched(true)}
+          onPress={() =>
+            handleSearch(searchInputValue).then(res => setSearchHits(res))
+          }
         />
       </View>
-      {searched && <Text style={s.h1}>{searchInputValue}</Text>}
+      {Array.from(searchHits).length > 0 && (
+        <FlatList
+          data={searchHits}
+          renderItem={({item}) => <RecipeCard recipe={item} />}
+          numColumns={2}
+          keyExtractor={(item, index) => index.toString()}
+          contentContainerStyle={{
+            flexGrow: 1,
+            alignItems: 'center',
+            paddingVertical: 20,
+          }}
+        />
+      )}
     </View>
   );
 };
